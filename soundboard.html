@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        
+        <title>Soundboard François l'Embrouille</title>
+        
+        <link href="https://fonts.googleapis.com/css?family=Chicle|Gudea&subset=latin-ext" rel="stylesheet">
+
+        <style type="text/css" media="screen">
+            body {
+                font-family: 'Gudea', sans-serif;
+                font-size: 16px;
+                background-color: #240024;
+                color: #FFE3FF;
+            }
+
+            h1, h2, h3 {
+                font-family: 'Chicle', cursive;
+                font-weight: normal;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 3em;
+            }
+
+            h1 > sup {
+                font-size: 0.5em;
+                color: #FCF2FC;
+            }
+
+            div {
+                display: inline-block;
+                padding: 0.8em;
+                margin: 1.8em;
+                cursor: pointer;
+                background-color: #542654;
+                position: relative;
+            }
+
+            img {
+                position: absolute;
+                top: -70px;
+                right: 0;
+                z-index: -1;
+            }
+
+            div.playing {
+                background-color: #D48600;
+            }
+
+            div > span {
+                display: inline-block;
+                position: relative;
+                background-color: #693769;
+                top: -1em;
+                left: 1em;
+                padding: 0.5em;
+            }
+
+            div.playing > span {
+                background-color: #FCAF2B;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>François l'Embrouille <sup>soundboard</sup></h1>
+
+        <audio src="normalized/appelle_la_police.mp3" controls autobuffer="true" title="j'appelle la police" />
+        <audio src="normalized/fais_mon_boulot.mp3" controls autobuffer="true" title="je fais mon boulot" />
+        <audio src="normalized/faut_reflechir.mp3" controls autobuffer="true" title="faut réfléchir" />
+        <audio src="normalized/jouer_au_con.mp3" controls autobuffer="true" title="jouer au con" />
+        <audio src="normalized/le_con_ici.mp3" controls autobuffer="true" title="le con ici" />
+        <audio src="normalized/louer_un_bus.mp3" controls autobuffer="true" title="louer un bus" />
+        <audio src="normalized/mais_si_viens.mp3" controls autobuffer="true" title="mais si, viens" />
+        <audio src="normalized/malade.mp3" controls autobuffer="true" title="t'es malade" />
+        <audio src="normalized/occupes_a_enerver.mp3" controls autobuffer="true" title="occupés à m'énerver" />
+        <audio src="normalized/outrage.mp3" controls autobuffer="true" title="y'a outrage" />
+        <audio src="normalized/plus_con_que_moi.mp3" controls autobuffer="true" title="plus con que moi" />
+        <audio src="normalized/prendre_pour_un_con.mp3" controls autobuffer="true" title="me prendre pour un con" />
+        <audio src="normalized/situation_pas_marrante.mp3" controls autobuffer="true" title="situation pas marrante" />
+        <audio src="normalized/trompe.mp3" controls autobuffer="true" title="je m'a trompé" />
+        <audio src="normalized/tu_viens_maintenant.mp3" controls autobuffer="true" title="tu viens maintenant" />
+        <audio src="normalized/viens_je_te_dis.mp3" controls autobuffer="true" title="viens, je t'dis" />
+        <audio src="normalized/vous_jouez_au_con.mp3" controls autobuffer="true" title="vous jouez au con" />
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+        <script type="text/javascript" charset="utf-8">
+            var allowedKeys = 'abcdefghijklmnopqrstuvwxyz0123456789'.split('');
+            var keyToAudio = {};
+
+            $(function() {
+                function play(audio) {
+                    $('audio').each(function(i, audioPlaying) {
+                        if (!audio.paused && audio != audioPlaying) {
+                            audioPlaying.pause();
+                            audioPlaying.currentTime = 0;
+                        }
+                    });
+
+                    audio.relatedButton.addClass('playing');
+                    audio.relatedButton.append($('<img src="img/embrouille.png" width="70" height="70" title="Embrouille" />'));
+                }
+
+                function pause(audio) {
+                    audio.relatedButton.removeClass('playing');
+                    audio.relatedButton.find('img').remove();
+                }
+
+                $('audio').removeAttr('controls').each(function(i) {
+                    var button = $('<div>' + $(this).attr("title") + '</div>');
+
+                    var audio = this;
+                    this.addEventListener('play', function() { play(audio); });
+                    this.addEventListener('pause', function() { pause(audio); });
+                    button.click(function() { audio.play(); });
+
+                    if (i in allowedKeys) {
+                        var key = allowedKeys[i];
+                        keyToAudio[key] = audio;
+                        button.append($('<span>' + key + '</span>'));
+                    }
+
+                    this.relatedButton = button;
+
+                    $('body').append(button);
+                });
+
+                document.addEventListener('keyup', function (e) {
+                    if (e.key in keyToAudio) {
+                        keyToAudio[e.key].play();
+                    }
+                }, false);
+            });
+        </script>
+
+    </body>
+</html>
